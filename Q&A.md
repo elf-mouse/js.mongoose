@@ -38,7 +38,27 @@ promise.then(function (doc) {
 });
 ```
 
-## Promises for the MongoDB Driver
+---
+
+__Plugging in your own Promises Library__
+
+```js
+var query = Band.findOne({name: "Guns N' Roses"});
+
+// Use native promises
+mongoose.Promise = global.Promise;
+assert.equal(query.exec().constructor, global.Promise);
+
+// Use bluebird
+mongoose.Promise = require('bluebird');
+assert.equal(query.exec().constructor, require('bluebird'));
+
+// Use q. Note that you **must** use `require('q').Promise`.
+mongoose.Promise = require('q').Promise;
+assert.ok(query.exec() instanceof require('q').makePromise);
+```
+
+__Promises for the MongoDB Driver__
 
 ```js
 var uri = 'mongodb://localhost:27017/mongoose_test';
